@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use Exception;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -14,7 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -37,13 +38,16 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //
-        $student = new Student();
-        $student->name = $request->input('name');
-        $student->email = $request->input('email');
-        $student->password = $request->input('password');
-        $student->phone = $request->input('phone');
-        $student->save();
-        return redirect()->back()->with('success', 'Student created successfully.');
+        try {   $student = new Student();
+            $student->name = $request->input('name');
+            $student->email = $request->input('email');
+            $student->password = $request->input('password');
+            $student->phone = $request->input('phone');
+            $student->save();
+            return redirect()->back()->with('success', 'Student created successfully.');
+         }catch(Exception $e){
+            return redirect()->back()->with('error', 'Failed to save student data. Please try again.'.$e->getMessage());
+        }
     }
 
     /**
@@ -55,6 +59,8 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         //
+        $students=Student::all();
+        return view('show',compact('students'));
     }
 
     /**
@@ -86,8 +92,11 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
-        //
+
+        $student=Student::findOrFail($id);
+        $student->delete();
+        return redirect()->back()->with('success', 'Student deleted successfully.');
     }
 }

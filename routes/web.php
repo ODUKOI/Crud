@@ -14,5 +14,7 @@ use App\Http\Controllers\StudentController;
 |
 */
 
+Route::get('/show', [StudentController::class,'show'])->name('show');
 Route::get('/', [StudentController::class,'create'])->name('create');
 Route::post('/store', [StudentController::class,'store'])->name('store');
+Route::delete('/{id}', [StudentController::class,'destroy'])->name('delete');
